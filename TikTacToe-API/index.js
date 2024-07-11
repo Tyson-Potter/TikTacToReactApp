@@ -36,17 +36,53 @@ app.get("/data", async (req, res) => {
   }
 });
 app.put("/createGame", async (req, res) => {
+  console.log("Creating new game document...");
   try {
-    const snapshot = await db.collection("games").get();
-    const data = snapshot.docs.map((doc) => doc.data());
-    console.log(data);
+    let newGameId = generateRandomId();
 
-    res.status(200).json(data);
+    // Extract the JSON object from the request body
+    const newGame = {
+      id: newGameId,
+      gameState: resetGameState,
+      currentPlayerTurn: "X",
+      gameStatus: "pending",
+    };
+
+    // Add the new game document to the "games" collection
+    const docRef = await db.collection("games").add(newGame);
+
+    // Respond with the ID of the newly created document
+    res.status(201).json({ newGame });
   } catch (error) {
-    console.log("fail");
+    console.error("Error creating new game document:", error);
     res.status(500).send(error.toString());
   }
 });
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+function generateRandomId(length = 8) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+}
+
+// Example usage:
+const resetGameState = [
+  { x: 0, y: 0, owner: "neutral" },
+  { x: 1, y: 0, owner: "neutral" },
+  { x: 2, y: 0, owner: "neutral" },
+  { x: 0, y: 1, owner: "neutral" },
+  { x: 1, y: 1, owner: "neutral" },
+  { x: 2, y: 1, owner: "neutral" },
+  { x: 0, y: 2, owner: "neutral" },
+  { x: 1, y: 2, owner: "neutral" },
+  { x: 2, y: 2, owner: "neutral" },
+];
