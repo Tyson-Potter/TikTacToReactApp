@@ -49,7 +49,8 @@ app.put("/createGame", async (req, res) => {
     };
 
     // Add the new game document to the "games" collection
-    const docRef = await db.collection("games").add(newGame);
+    const docRef = db.collection("games").doc(newGameId);
+    await docRef.set(newGame);
 
     // Respond with the ID of the newly created document
     res.status(201).json({ newGame });
