@@ -62,7 +62,7 @@ app.put("/createGame", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-function generateRandomId(length = 8) {
+function generateRandomId(length = 20) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -75,7 +75,6 @@ function generateRandomId(length = 8) {
   return result;
 }
 
-// Example usage:
 const resetGameState = [
   { x: 0, y: 0, owner: "neutral" },
   { x: 1, y: 0, owner: "neutral" },

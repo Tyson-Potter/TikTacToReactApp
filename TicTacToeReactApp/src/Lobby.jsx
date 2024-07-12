@@ -11,7 +11,7 @@ function Lobby({handleCreateGame, setinGameState, createGame, setGameState,gameS
    }
   return (
     <>
-<button onClick={() => handleCreateGame(setGameState,gameState)} id="createGame">Create Game</button>
+<button key="button" onClick={() => handleCreateGame(setGameState,gameState)} id="createGame">Create Game</button>
       Create Game
    
       <div id="games">Games place holder</div>

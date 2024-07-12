@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       
-      {inGame ? <Grid gameState={gameState}/>:<Lobby  setinGameState={setinGameState} setGameState={setGameState}  gameState={gameState}createGame={createGame}/>} 
+      {inGame ? <Grid key="grid" gameState={gameState}/>:<Lobby key="lobby"  setinGameState={setinGameState} setGameState={setGameState}  gameState={gameState}createGame={createGame}/>} 
     
    
     </>
