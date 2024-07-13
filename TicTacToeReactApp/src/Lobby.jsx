@@ -4,7 +4,8 @@ import GamesComponent from "./GamesComponent";
 function Lobby({ createGame, setGameState, gameState, joinGame }) {
   async function handleCreateGame(setGameState) {
     let game = await createGame();
-    localStorage.setItem("playerName", game.newGame.currentPlayerTurn);
+
+    localStorage.setItem("playerName", "X");
     localStorage.setItem("currentGameId", game.newGame.id);
 
     setGameState(game.newGame.gameState);

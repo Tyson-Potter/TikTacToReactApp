@@ -19,7 +19,6 @@ function GamesComponent({ handleJoinGame }) {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
-    // Function to fetch games and update state
     const fetchGames = async () => {
       try {
         const gamesData = await getGames();
@@ -29,13 +28,10 @@ function GamesComponent({ handleJoinGame }) {
       }
     };
 
-    // Fetch games immediately when the component mounts
     fetchGames();
 
-    // Set up an interval to fetch games every 5 seconds
     const intervalId = setInterval(fetchGames, 5000);
 
-    // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
 

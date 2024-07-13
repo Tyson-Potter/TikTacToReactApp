@@ -1,28 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import Lobby from "./Lobby"; // Ensure the correct import path
 import Grid from "./Grid";
 
-// localStorage.setItem('inGame', JSON.stringify(false));
-// localStorage.setItem('gameId', JSON.stringify(null));
-// localStorage.setItem('player', JSON.stringify(null));//x or o
-// localStorage.setItem('playerName', JSON.stringify(null));
-// const inGame = JSON.parse(localStorage.getItem('inGame'));
-
 function App() {
   const [gameState, setGameState] = useState(null);
   const [playerName, setPlayerName] = useState(null);
-  useEffect(() => {
-    // This code runs once when the component mounts
-  }, [gameState]);
-  // use a context privder to keep track of in a game so you cna change it in the child class
+
   return (
     <>
       {gameState ? (
         <Grid
+          makeMove={makeMove}
           playerName={(playerName, setPlayerName)}
           key="grid"
+          deleteGame={deleteGame}
           gameState={gameState}
+          setGameState={setGameState}
         />
       ) : (
         <Lobby
@@ -75,4 +69,39 @@ async function createGame() {
   const result = await response.json();
 
   return result;
+}
+async function makeMove(gameId, [x, y]) {
+  const response = await fetch(`http://localhost:3001/makeMove`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      gameId: gameId,
+      playerName: localStorage.getItem("playerName"),
+      x: x,
+      y: y,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    throw new Error(`Failed to join game: ${errorMessage}`);
+  }
+
+  const result = await response.json();
+
+  return result;
+}
+async function deleteGame(gameId) {
+  // eslint-disable-next-line no-unused-vars
+  const response = await fetch(`http://localhost:3001/deleteGame`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      gameId: gameId,
+    }),
+  });
 }
