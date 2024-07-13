@@ -21,13 +21,32 @@ db.settings({
 
 // Middleware to parse JSON
 app.use(express.json());
+app.put("/joinGame", async (req, res) => {
+  let incomingGameId = req.body.gameId;
+  const docRef = db.collection("games").doc(incomingGameId);
+  const game = (await docRef.get()).data();
+  console.log(game);
+  try {
+    if (game.numberOfPlayers === 1) {
+      game.numberOfPlayers = 2;
+      game.status = "active";
+      const docRef = db.collection("games").doc(game.id);
 
+      await docRef.update(game);
+      res.body.game = game;
+    } else {
+      res.status(400).send("Game is full");
+    }
+  } catch (error) {
+    console.error("Error joining game:", error);
+    res.status(500).send(error.toString());
+  }
+});
 // Endpoint to get data
-app.get("/data", async (req, res) => {
+app.get("/games", async (req, res) => {
   try {
     const snapshot = await db.collection("games").get();
     const data = snapshot.docs.map((doc) => doc.data());
-    console.log(data);
 
     res.status(200).json(data);
   } catch (error) {
@@ -46,6 +65,7 @@ app.put("/createGame", async (req, res) => {
       gameState: resetGameState,
       currentPlayerTurn: "X",
       gameStatus: "pending",
+      numberOfPlayers: 1,
     };
 
     // Add the new game document to the "games" collection

@@ -1,0 +1,7 @@
+.GameCard {
+  width: 200px;
+  height: 50px;
+  background-color: bisque;
+  margin-top: 20px;
+  border: 5px solid black;
+}
