@@ -30,6 +30,7 @@ function App() {
           setGameState={setGameState}
           gameState={gameState}
           createGame={createGame}
+          joinGame={joinGame}
         />
       )}
     </>
@@ -37,6 +38,29 @@ function App() {
 }
 
 export default App;
+
+// }
+async function joinGame(gameId) {
+  const response = await fetch(`http://localhost:3001/joinGame`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      gameId: gameId,
+      playerName: "O",
+    }),
+  });
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    throw new Error(`Failed to join game: ${errorMessage}`);
+  }
+
+  const result = await response.json();
+
+  return result;
+}
 
 async function createGame() {
   const response = await fetch("http://localhost:3001/createGame", {

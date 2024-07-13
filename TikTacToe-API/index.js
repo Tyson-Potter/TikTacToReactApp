@@ -21,19 +21,23 @@ db.settings({
 
 // Middleware to parse JSON
 app.use(express.json());
+
 app.put("/joinGame", async (req, res) => {
   let incomingGameId = req.body.gameId;
   const docRef = db.collection("games").doc(incomingGameId);
   const game = (await docRef.get()).data();
-  console.log(game);
+
   try {
     if (game.numberOfPlayers === 1) {
       game.numberOfPlayers = 2;
       game.status = "active";
+      game.playersName = "O";
       const docRef = db.collection("games").doc(game.id);
 
       await docRef.update(game);
-      res.body.game = game;
+
+      console.log(game);
+      res.status(201).json({ game });
     } else {
       res.status(400).send("Game is full");
     }
@@ -64,7 +68,7 @@ app.put("/createGame", async (req, res) => {
       id: newGameId,
       gameState: resetGameState,
       currentPlayerTurn: "X",
-      gameStatus: "pending",
+      status: "pending",
       numberOfPlayers: 1,
     };
 
